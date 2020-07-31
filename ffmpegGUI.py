@@ -896,6 +896,7 @@ class MainWindow(object):
     def Run(self):
         try:
             process = QtCore.QProcess(app)
+            # process.start(r'F:\ffmpeg\Temp\dummy.bat')
             process.start('F:/ffmpeg/ffmpeg.exe', self.CommandArgument)
             if process.waitForStarted():
                 self.label_Progress.setVisible(True)
@@ -942,7 +943,7 @@ class MainWindow(object):
         self.CancelFileButton.setVisible(False)
         if os.path.exists(r'.\Temp\\thumbnail.png'):
             os.remove(r'.\Temp\\thumbnail.png')
-        filename = QtWidgets.QFileDialog.getOpenFileName()
+        filename = QtWidgets.QFileDialog.getOpenFileName(None, "Select File", "", "*.3gp *.amv *.avi *.flv *.gif *.mkv *.mp4 *.mpeg *.mpg *.ts *wmv")
         if filename[0] == '':
             return None
         print(filename)
@@ -982,7 +983,7 @@ class MainWindow(object):
         self.ImageThumbnail.clear()
         self.CancelImageButton.setVisible(False)
 
-        filename = QtWidgets.QFileDialog.getOpenFileName()
+        filename = QtWidgets.QFileDialog.getOpenFileName(None, "Select Image", "", "*.jpeg *.png")
         if filename[0] == '':
             return None
         self.ImagePathString = filename[0]
