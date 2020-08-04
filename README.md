@@ -1,2 +1,2 @@
 # Simple-Video-Soft
-A GUI for FFmpeg using Python and PyQt5
+A simple GUI for FFmpeg using Python and PyQt5
