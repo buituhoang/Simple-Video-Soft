@@ -897,7 +897,7 @@ class MainWindow(object):
         try:
             process = QtCore.QProcess(app)
             # process.start(r'F:\ffmpeg\Temp\dummy.bat')
-            process.start('F:/ffmpeg/ffmpeg.exe', self.CommandArgument)
+            process.start('ffmpeg', self.CommandArgument)
             if process.waitForStarted():
                 self.label_Progress.setVisible(True)
             if process.waitForFinished():
