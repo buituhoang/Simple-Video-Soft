@@ -116,6 +116,8 @@ class MainWindow(object):
         self.verticalLayout_6.addWidget(self.label_CRF_Video)
         self.spinBoxCFRVideo = QtWidgets.QSpinBox(self.frame_7)
         self.spinBoxCFRVideo.setProperty("value", 23)
+        self.spinBoxCFRVideo.setMaximum(51)
+        self.spinBoxCFRVideo.setMinimum(0)
         self.spinBoxCFRVideo.setObjectName("spinBoxCFRVideo")
         self.verticalLayout_6.addWidget(self.spinBoxCFRVideo)
         self.horizontalLayout_8.addWidget(self.frame_7)
@@ -894,19 +896,17 @@ class MainWindow(object):
             self.label_Progress.setVisible(True)
 
     def Run(self):
-        try:
-            process = QtCore.QProcess(app)
-            # process.start(r'F:\ffmpeg\Temp\dummy.bat')
-            process.start('ffmpeg', self.CommandArgument)
-            if process.waitForStarted():
-                self.label_Progress.setVisible(True)
-            if process.waitForFinished():
-                self.label_Progress.setText("Done")
-                time.sleep(3)
-                self.label_Progress.setVisible(False)
-                self.label_Progress.setText("Please wait ...")
-        except KeyboardInterrupt:
-            raise
+        
+        process = QtCore.QProcess(app)
+        # process.start(r'F:\ffmpeg\Temp\dummy.bat')
+        process.start('ffmpeg', self.CommandArgument)
+        if process.waitForStarted():
+            self.label_Progress.setVisible(True)
+        if process.waitForFinished():
+            self.label_Progress.setText("Done")
+            time.sleep(3)
+            self.label_Progress.setVisible(False)
+            self.label_Progress.setText("Please wait ...")
 
     def CFRchangeVideo(self):
         self.CRF = '-crf ' + str(self.spinBoxCFRVideo.value())
@@ -953,6 +953,7 @@ class MainWindow(object):
         self.FileName.setText("Chosen file: " + Path(self.FilePathString).parts[len(Path(self.FilePathString).parts) - 1])
         if os.path.exists(r'.\Temp\\thumbnail.png'):
             os.remove(r'.\Temp\\thumbnail.png')
+
         (
             ffmpeg
             .input(self.FilePathString, ss=1)
@@ -1002,32 +1003,32 @@ class MainWindow(object):
             if self.AddressBroadcastString != '':
                 if self.tabWidget.currentIndex() == 2:
                     self.command_box.insertPlainText(f'-i {self.FilePathString} -vf {self.TransposeCommand} -c:v libx264 -b:v 6M -maxrate 6M -bufsize 2M -c:a aac -ac 2 {self.AddressBroadcastString}')
-                    self.CommandArgument = ['-i', self.FilePathString, '-vf', self.TransposeCommand, '-c:v', 'libx264', '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-f', 'rtp_mpegts', self.StreamingAddress]
+                    self.CommandArgument = ['-i', self.FilePathString, '-threads', '1', '-vf', self.TransposeCommand, '-c:v', 'libx264', '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-f', 'rtp_mpegts', self.StreamingAddress]
                     print(self.CommandArgument)
                 elif self.tabWidget.currentIndex() == 1:
                     self.command_box.insertPlainText(f'-i {self.FilePathString} {self.AddImageString} -c:v libx264 -b:v 6M -maxrate 6M -bufsize 2M -c:a aac -ac 2 {self.AddressBroadcastString}')
                     if self.ImagePathString != '' and self.FilterString != '':
-                        self.CommandArgument = ['-i', self.FilePathString, '-i', self.ImagePathString, '-filter_complex', self.FilterString , '-c:v', 'libx264', '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2','-f', 'rtp_mpegts', self.StreamingAddress]
+                        self.CommandArgument = ['-i', self.FilePathString, '-i', self.ImagePathString, '-filter_complex', self.FilterString , '-threads', '1', '-c:v', 'libx264', '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2','-f', 'rtp_mpegts', self.StreamingAddress]
                         print(self.CommandArgument)
                 else:
                     self.command_box.insertPlainText(f'-i {self.FilePathString} -c:v libx264 -b:v 6M -maxrate 6M -bufsize 2M -c:a aac -ac 2 {self.AddressBroadcastString}')
                     print(self.StreamingAddress)
-                    self.CommandArgument = ['-i', self.FilePathString, '-c:v', 'libx264', '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-f', 'rtp_mpegts', self.StreamingAddress]
+                    self.CommandArgument = ['-i', self.FilePathString, '-threads', '1', '-c:v', 'libx264', '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-f', 'rtp_mpegts', self.StreamingAddress]
                     print(self.CommandArgument)
         else:
             if self.tabWidget.currentIndex() == 2:
                 self.command_box.insertPlainText(f'-i {self.FilePathString} -vf {self.TransposeCommand} -c:v libx264 {self.ConverSpeed} -b:v 6M -maxrate 6M -bufsize 2M -c:a aac -ac 2 {self.CRF} {self.SavingPath}')
-                self.CommandArgument = ['-i', self.FilePathString, '-vf', self.TransposeCommand, '-c:v', 'libx264', '-preset', self.choose_speed_video.currentText(), '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-crf', str(self.spinBoxCFRVideo.value()), self.SavingPath]
+                self.CommandArgument = ['-i', self.FilePathString, '-threads', '1', '-vf', self.TransposeCommand, '-c:v', 'libx264', '-preset', self.choose_speed_video.currentText(), '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-crf', str(self.spinBoxCFRVideo.value()), self.SavingPath]
                 print(self.CommandArgument)
             elif self.tabWidget.currentIndex() == 1:
                 self.command_box.insertPlainText(f'-i {self.FilePathString} {self.AddImageString} -c:v libx264 {self.ConverSpeed} -b:v 6M -maxrate 6M -bufsize 2M -c:a aac -ac 2 {self.CRF} {self.SavingPath}')
                 if self.ImagePathString != '' and self.FilterString != '':
-                    self.CommandArgument = ['-i', self.FilePathString, '-i', self.ImagePathString, '-filter_complex', self.FilterString , '-c:v', 'libx264', '-preset', self.choose_speed_video.currentText(), '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-crf', str(self.spinBoxCFRVideo.value()), self.SavingPath]
+                    self.CommandArgument = ['-i', self.FilePathString, '-i', self.ImagePathString, '-filter_complex', self.FilterString , '-threads', '1', '-c:v', 'libx264', '-preset', self.choose_speed_video.currentText(), '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-crf', str(self.spinBoxCFRVideo.value()), self.SavingPath]
                     print(self.CommandArgument)
             else:
                 self.command_box.insertPlainText(f'-i {self.FilePathString} -c:v libx264 {self.ConverSpeed} -b:v 6M -maxrate 6M -bufsize 2M -c:a aac -ac 2 {self.CRF} {self.SavingPath}')
                 print(self.StreamingAddress)
-                self.CommandArgument = ['-i', self.FilePathString, '-c:v', 'libx264', '-preset', self.choose_speed_video.currentText(), '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-crf', str(self.spinBoxCFRVideo.value()), self.SavingPath]
+                self.CommandArgument = ['-i', self.FilePathString, '-threads', '1', '-c:v', 'libx264', '-preset', self.choose_speed_video.currentText(), '-b:v', '6M', '-maxrate', '6M', '-bufsize', '2M', '-c:a', 'aac', '-ac', '2', '-crf', str(self.spinBoxCFRVideo.value()), self.SavingPath]
                 print(self.CommandArgument)
 
             
@@ -1070,7 +1071,7 @@ class MainWindow(object):
         self.BrowseButton.setText(_translate("MainWindow", "Browse"))
         self.label_Video_Convert_to.setText(_translate("MainWindow", "Convert to"))
         self.label_Speed_Video.setText(_translate("MainWindow", "Speed"))
-        self.label_CRF_Video.setText(_translate("MainWindow", "Speed"))
+        self.label_CRF_Video.setText(_translate("MainWindow", "CFR"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.VideoConversionTab), _translate("MainWindow", "Video Conversion"))
         self.label_Image.setText(_translate("MainWindow", "Image"))
         self.label_Image_File.setText(_translate("MainWindow", "File"))
