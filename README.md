@@ -1,5 +1,5 @@
 # Simple Video Soft
-A simple interface base on FFmpeg using Python and PyQt5
+## A simple interface base on FFmpeg using Python and PyQt5
 ---
 # Prerequisites
 1. [PyQt5](https://riverbankcomputing.com/software/pyqt/download)
@@ -7,4 +7,6 @@ A simple interface base on FFmpeg using Python and PyQt5
 3. [ffmpeg-python](https://pypi.org/project/ffmpeg-python/)
 ---
 # Installation
-Run Main.py
+1. Download ZIP file
+2. Extract ZIP file to a location of your choice.
+3. Run Main.py
